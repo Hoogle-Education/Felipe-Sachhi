@@ -5,121 +5,85 @@
 
 int min(int a, int b)
 {
-  if (a == NULL && b == NULL)
-    return NULL;
-  if (a == NULL)
-    return b;
-  if (b == NULL)
-    return a;
-
   return a < b ? a : b;
 }
 
 int max(int a, int b)
 {
-  if (a == NULL && b == NULL)
-    return NULL;
-  if (a == NULL)
-    return b;
-  if (b == NULL)
-    return a;
-
   return a > b ? a : b;
 }
 
-int vida_minima(int **matriz, Pos *atual, Pos *destino)
+void feedback(Pos *atual, Pos *destino)
 {
-  puts("****");
+  printf("Atual: (%d, %d)\n", atual->i, atual->j);
+  printf("Destino: (%d, %d)\n", destino->i, destino->j);
+}
 
-  bool fimHorizontal = atual->i == destino->i;
-  bool fimVertical = atual->j == destino->j;
-  int celula = matriz[atual->i][atual->j];
-  int casoVertical = NULL, casoHorizontal = NULL;
-  Pos *proximo;
+int agrupar_caminho(int valor_atual, int casoVertical, int casoHorizontal)
+{
+  int menorCaso = min(casoHorizontal, casoVertical);
+  // printf("hort: %d | vert: %d | menor: %d | ", casoHorizontal, casoVertical, menorCaso);
+  int result;
 
-  puts("-------------------------");
-  printf("ATUAL (i = %d, j = %d)\n", atual->i, atual->j);
-  visualizarMatriz(matriz, atual->i, atual->j);
-  puts("-------------------------");
-
-  // * caso base: celula individual
-  if (fimHorizontal && fimVertical) // true and true
+  if (valor_atual >= 0) // * OK
   {
-    return abs(min(celula, 0)) + 1;
+    int best = menorCaso - valor_atual;
+    result = max(best, 1);
+  }
+  else // * testar
+  {
+    result = abs(valor_atual) + menorCaso;
   }
 
-  // * caso base: caso linha
-  if (!fimHorizontal) // true and false
-  {                   // anda horizontalmente para direita
+  // printf("result = %d\n", result);
+  return result;
+}
+
+int vida_minima(int **matriz, int **dp, Pos *atual, Pos *destino, int R, int C)
+{
+  // printf("Pos [%d, %d] - ", atual->i, atual->j);
+  int valor_atual = matriz[atual->i][atual->j];
+  Pos *proximo = (Pos *)malloc(sizeof(Pos));
+  int casoVertical = INT_MAX, casoHorizontal = INT_MAX;
+
+  // * caso nao dinamico
+  if (dp[atual->i][atual->j] != INT_MAX)
+  {
+    // printf("Caso ja calculado\n");
+    return dp[atual->i][atual->j];
+  }
+
+  // printf("Calculando...\n");
+
+  // * caso base: valor_atual individual * OK
+  if (atual->i == destino->i && atual->j == destino->j) // true and true
+  {
+    int minimo = min(valor_atual, 0);
+    return dp[atual->i][atual->j] = abs(minimo) + 1;
+  }
+
+  // * caso recursivo 1: caso linha
+  if (atual->j < destino->j) // se nao for o fim horizontal
+  {                          // anda horizontalmente para direita
     proximo->i = atual->i;
     proximo->j = atual->j + 1;
 
-    casoHorizontal = vida_minima(matriz, proximo, destino);
+    casoHorizontal = vida_minima(matriz, dp, proximo, destino, R, C);
   }
 
-  // * caso base: caso coluna
-  if (!fimVertical) //  false and true
-  {                 // anda verticalmente para baixo
+  // * caso recursivo 2: caso coluna
+  if (atual->i < destino->i) //  se nao for o fim vertical
+  {                          // anda verticalmente para baixo
     proximo->i = atual->i + 1;
     proximo->j = atual->j;
 
-    casoVertical = vida_minima(matriz, proximo, destino);
+    casoVertical = vida_minima(matriz, dp, proximo, destino, R, C);
   }
 
-  int melhorCaso = min(casoHorizontal, casoVertical);
+  free(proximo);
 
-  if (celula >= 0)
-  {
-    return max(melhorCaso - celula, 1);
-  }
-  else
-  {
-    return max(abs(celula), melhorCaso) + 1;
-  }
+  // * operacao recursiva
+  int result = agrupar_caminho(valor_atual, casoVertical, casoHorizontal);
+  dp[atual->i][atual->j] = result;
+  return result;
 }
-
-// int guloso(int **matriz, int R, int C)
-// {
-//   int i = 0, j = 0;
-//   int caminho = matriz[i][j];
-//   // no melhor caso, ou seja, pegando caminhos que apenas tenham poções de energia, a vida mínima necessária é 1
-//   int initial_life = 1;
-
-//   // Verifica se i ou j chegaram aos extremos da funcao
-//   for (; j != C - 1 || i != R - 1;)
-//   {
-//     if (j == C - 1)
-//     {
-//       // Caso em que j chegou em seu limite das dimensões da matriz, e a partir de agora os movimentos possíveis são somente para baixo
-//       i++;
-//     }
-//     else if (i == R - 1)
-//     {
-//       // Caso em que i chegou em seu limite das dimensões da matriz, e a partir de agora os movimentos possíveis são somente para a direita
-//       j++;
-//     }
-//     else if (matriz[i + 1][j] > matriz[i][j + 1])
-//     {
-//       // Verificação se o elemento a direita da posição atual é maior do que o elemento abaixo
-//       i++;
-//     }
-//     else
-//     {
-//       // Caso a condição anterior tenha falhado, então o elemento abaixo da posição atual é maior do que o elemento à direita
-//       j++;
-//     }
-//     // O maior valor escolhido anteriormente será somado à variável caminho
-//     caminho += matriz[i][j];
-//     // Caso o valor do caminho percorrido chegue a 0 ou menor, então tirando a diferença entre a vida inicial e o caminho percorrido, terá a vida inicial
-//     // necessária para se chegar à posição atual.
-//     // A variável caminho é zerada, pois neste momento já se sabe a vida inicial necessária para chegar nessa posição, e este raciocínio será realizada
-//     // até que chegue no artefado desejado
-//     if (caminho <= 0)
-//     {
-//       initial_life = initial_life - caminho;
-//       caminho = 0;
-//     }
-//     matriz[i][j] = -1;
-//   }
-//   return initial_life;
-// }

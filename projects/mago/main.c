@@ -15,24 +15,26 @@ int main()
     fscanf(arquivo, "%d %d", &R, &C);
 
     int **matriz = alocaMatriz(R, C);
+    int **dp = alocaMatrizComValor(MAX_N, MAX_N, INT_MAX);
     inicializaMatriz(matriz, R, C, arquivo);
 
-    visualizarMatriz(matriz, R, C);
+    // visualizarMatriz(matriz, R, C);
 
-    Pos *origem, *destino;
+    Pos *origem = (Pos *)malloc(sizeof(Pos));
+    Pos *destino = (Pos *)malloc(sizeof(Pos));
+
     origem->i = 0;
     origem->j = 0;
     destino->i = R - 1;
     destino->j = C - 1;
 
-    int resultado = vida_minima(matriz, origem, destino);
-    puts("**********");
-    puts("**********");
-    printf("RESULTADO = %d", resultado);
-    puts("**********");
-    puts("**********");
+    result = vida_minima(matriz, dp, origem, destino, R, C);
 
-    desalocarMatriz(matriz, R);
+    printf("RESULTADO = %d\n", result);
+
     // desalocarMatriz(auxiliar, R);
+    desalocarMatriz(matriz, R);
+    free(origem);
+    free(destino);
     return 0;
 }

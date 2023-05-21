@@ -12,6 +12,22 @@ int **alocaMatriz(int R, int C)
     return matriz;
 }
 
+// aloca matriz com valor nas celulas
+int **alocaMatrizComValor(int R, int C, int V)
+{
+    int **matriz = alocaMatriz(R, C);
+
+    for (int i = 0; i < R; i++)
+    {
+        for (int j = 0; j < C; j++)
+        {
+            matriz[i][j] = V;
+        }
+    }
+
+    return matriz;
+}
+
 // Visualizar matriz
 void visualizarMatriz(int **matriz, int R, int C)
 {
