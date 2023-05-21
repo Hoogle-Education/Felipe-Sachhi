@@ -7,11 +7,10 @@
 #include <math.h>
 #include <stdbool.h>
 
-
 int **alocaMatriz(int, int);
+int **alocaMatrizComValor(int, int, int);
 void inicializaMatriz(int **, int, int, FILE *);
 void desalocarMatriz(int **, int);
 void visualizarMatriz(int **, int, int);
-
 
 #endif
