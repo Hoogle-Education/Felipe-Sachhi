@@ -21,8 +21,6 @@ const employee = {
 //     : "Nao se aplica"
 //   : "Nao se aplica";
 
-// com optional chaining
-
 // const soma = function (a, b) {
 //   return a + b;
 // };
@@ -33,5 +31,11 @@ const ehPar = (number) => number % 2 == 0;
 console.log(soma);
 console.log(soma(2, 3));
 
+// com optional chaining
 const companyOfEmployee = employee.job?.company?.name ?? "Nao se aplica";
+
+console.log(Object.keys(employee));
+console.log(Object.values(employee));
+console.log("name" in employee);
+
 // const coffeeAction = employee.job?.drinkCoffe

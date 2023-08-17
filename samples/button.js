@@ -4,6 +4,7 @@ output = document.querySelector(".textOutput");
 
 const alertFunction = () => alert("alerta!");
 
+// recomendacao
 button.addEventListener("click", (event) => {
   event.preventDefault();
   output.textContent += " mais texto";
