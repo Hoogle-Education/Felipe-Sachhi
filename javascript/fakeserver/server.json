@@ -1,0 +1,16 @@
+{
+  "students" : [
+    {
+      "name": "Pedro",
+      "course": "Math"
+    },
+    {
+      "name": "Maria",
+      "course": "Computer Science"
+    },
+    {
+      "name": "Beatriz",
+      "course": "Physics"
+    }
+  ]
+}
