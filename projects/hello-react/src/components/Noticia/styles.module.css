@@ -1,0 +1,8 @@
+.interactions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.noticia + .noticia { 
+  margin-top: .5rem;
+}

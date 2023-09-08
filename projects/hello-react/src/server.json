@@ -1,0 +1,22 @@
+{
+  "posts" : [
+    {
+      "title": "Noticia 1",
+      "author": "Jhon",
+      "content": "lorem impsum",
+      "likes": 0
+    },
+    {
+      "title": "Noticia 2",
+      "author": "Maria",
+      "content": "lorem impsum",
+      "likes": 0
+    },
+    {
+      "title": "Noticia 3",
+      "author": "Peter",
+      "content": "lorem impsum",
+      "likes": 0
+    }
+  ]
+}
